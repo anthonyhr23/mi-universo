@@ -1,0 +1,8 @@
+Pon aqui tus fotos con estos nombres:
+foto1.jpg
+foto2.jpg
+foto3.jpg
+... y asi hasta foto10.jpg (o las que necesites)
+
+Luego edita el archivo script.js para cambiar las frases de cada foto.
+Puedes borrar este archivo de texto cuando termines.
