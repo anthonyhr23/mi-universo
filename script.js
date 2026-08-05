@@ -114,10 +114,24 @@ function goTo(screenEl){
 }
 
 /* ---------- flujo principal ---------- */
+const bgMusic = document.getElementById('bgMusic');
+const muteBtn = document.getElementById('muteBtn');
+let musicMuted = false;
+
 document.getElementById('startBtn').addEventListener('click', () => {
   goTo(screens.cabin);
   warpBurst();
   showMemory(0, false);
+  bgMusic.volume = 0.55;
+  bgMusic.play().catch(() => {
+    /* el navegador bloqueó el autoplay o falta el archivo de audio; no pasa nada, sigue todo igual */
+  });
+});
+
+muteBtn.addEventListener('click', () => {
+  musicMuted = !musicMuted;
+  bgMusic.muted = musicMuted;
+  muteBtn.textContent = musicMuted ? '🔇' : '🔊';
 });
 
 screens.cabin.addEventListener('click', () => {
@@ -229,7 +243,7 @@ drawStars();
    ============================================================ */
 let galaxyReady = false;
 let scene3, camera3, renderer3, controls3, clock3;
-let galaxyPoints, heartPoints, heartHitbox;
+let galaxyPoints, heartPoints, heartHitbox, sparklePoints;
 let fotoSprites = [];
 let textoSprites = [];
 let raycaster3, mouse3;
@@ -253,14 +267,51 @@ function initGalaxyScene(){
   scene3.fog = new THREE.FogExp2(0x060217, 0.028);
   clock3 = new THREE.Clock();
 
+  /* --- textura circular suave para partículas con brillo --- */
+  function crearTexturaBrillo(){
+    const cvs = document.createElement('canvas');
+    cvs.width = 64; cvs.height = 64;
+    const c2 = cvs.getContext('2d');
+    const grad = c2.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grad.addColorStop(0, 'rgba(255,255,255,1)');
+    grad.addColorStop(0.4, 'rgba(255,255,255,.8)');
+    grad.addColorStop(1, 'rgba(255,255,255,0)');
+    c2.fillStyle = grad;
+    c2.fillRect(0, 0, 64, 64);
+    return new THREE.CanvasTexture(cvs);
+  }
+  const glowTex = crearTexturaBrillo();
+
   /* --- estrellas de fondo --- */
   const starGeo = new THREE.BufferGeometry();
-  const starCount = 3500;
+  const starCount = 5000;
   const starPos = new Float32Array(starCount * 3);
   for (let i = 0; i < starCount * 3; i++){ starPos[i] = (Math.random() - 0.5) * 400; }
   starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
-  const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.6, transparent: true });
+  const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.9, map: glowTex, transparent: true, depthWrite: false });
   scene3.add(new THREE.Points(starGeo, starMat));
+
+  /* --- chispas de colores flotando por toda la escena --- */
+  const sparkleCount = 260;
+  const sparkleGeo = new THREE.BufferGeometry();
+  const sparklePos = new Float32Array(sparkleCount * 3);
+  const sparkleCol = new Float32Array(sparkleCount * 3);
+  const sparklePalette = [0xffb8ec, 0xc8b6ff, 0xffd27a, 0xff3fc4].map(h => new THREE.Color(h));
+  for (let i = 0; i < sparkleCount; i++){
+    const i3 = i * 3;
+    const a = Math.random() * Math.PI * 2;
+    const r = 4 + Math.random() * 22;
+    sparklePos[i3]     = Math.cos(a) * r;
+    sparklePos[i3 + 1] = (Math.random() - 0.5) * 16;
+    sparklePos[i3 + 2] = Math.sin(a) * r;
+    const col = sparklePalette[i % sparklePalette.length];
+    sparkleCol[i3] = col.r; sparkleCol[i3 + 1] = col.g; sparkleCol[i3 + 2] = col.b;
+  }
+  sparkleGeo.setAttribute('position', new THREE.BufferAttribute(sparklePos, 3));
+  sparkleGeo.setAttribute('color', new THREE.BufferAttribute(sparkleCol, 3));
+  const sparkleMat = new THREE.PointsMaterial({ size: 0.32, map: glowTex, vertexColors: true, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+  sparklePoints = new THREE.Points(sparkleGeo, sparkleMat);
+  scene3.add(sparklePoints);
 
   /* --- galaxia espiral --- */
   const params = { count: 45000, size: 0.012, radius: 6, branches: 4, spin: 1, randomness: 0.25, randomnessPower: 3,
@@ -288,8 +339,8 @@ function initGalaxyScene(){
   galGeo.setAttribute('color', new THREE.BufferAttribute(galCol, 3));
   const galMat = new THREE.PointsMaterial({ size: params.size, vertexColors: true, blending: THREE.AdditiveBlending, depthWrite: false });
   galaxyPoints = new THREE.Points(galGeo, galMat);
-  galaxyPoints.position.set(-6, -1, -10);
-  galaxyPoints.rotation.x = 0.3;
+  galaxyPoints.position.set(0, 0.3, -3.5);
+  galaxyPoints.rotation.x = 0.45;
   scene3.add(galaxyPoints);
 
   /* --- corazón 3D de partículas --- */
@@ -375,10 +426,10 @@ function initGalaxyScene(){
   for (let i = 0; i < frases.length; i++){
     const t = crearTexto(frases[i]);
     const angle = Math.random() * Math.PI * 2;
-    const radius = 13 + Math.random() * 11;
+    const radius = 12 + Math.random() * 8;
     const x = Math.cos(angle) * radius;
     const z = Math.sin(angle) * radius;
-    const y = (Math.random() - 0.5) * 14;
+    const y = (Math.random() - 0.5) * 8;
     t.position.set(x, y, z);
     const size = 0.7 + Math.random() * 0.55;
     t.scale.set(size * 4, size, 1);
@@ -472,6 +523,10 @@ function tickGalaxy(){
   galaxyPoints.rotation.y += 0.0015;
   heartPoints.rotation.y += 0.004;
   heartPoints.rotation.z = Math.sin(elapsed * 1.6) * 0.06;
+  if (sparklePoints){
+    sparklePoints.rotation.y += 0.0009;
+    sparklePoints.material.opacity = 0.55 * eased * (0.75 + Math.sin(elapsed * 2) * 0.25);
+  }
 
   fotoSprites.forEach(s => {
     const d = s.userData;
