@@ -270,6 +270,7 @@ function initGalaxyScene(){
   galaxyReady = true;
 
   scene3 = new THREE.Scene();
+  scene3.fog = new THREE.FogExp2(0x060217, 0.028);
   clock3 = new THREE.Clock();
 
   /* --- estrellas de fondo --- */
@@ -354,12 +355,12 @@ function initGalaxyScene(){
       undefined,
       () => { texLoader.load(placeholderFor(i), (t2) => { mat.map = t2; mat.needsUpdate = true; }); }
     );
-    const scale = 1.1 + Math.random() * 0.5;
+    const scale = 1.3 + Math.random() * 0.55;
     sprite.scale.set(scale, scale, 1);
 
-    const orbitRadius = 4.5 + Math.random() * 2.2;
+    const orbitRadius = 6 + Math.random() * 3.5;
     const orbitAngle = (i / orbitCount) * Math.PI * 2;
-    const baseY = heartPoints.position.y + (Math.random() - 0.5) * 3;
+    const baseY = heartPoints.position.y + (Math.random() - 0.5) * 3.5;
 
     sprite.userData = {
       orbitRadius, orbitAngle,
@@ -394,12 +395,12 @@ function initGalaxyScene(){
   for (let i = 0; i < frases.length; i++){
     const t = crearTexto(frases[i]);
     const angle = Math.random() * Math.PI * 2;
-    const radius = 9 + Math.random() * 10;
+    const radius = 13 + Math.random() * 11;
     const x = Math.cos(angle) * radius;
     const z = Math.sin(angle) * radius;
     const y = (Math.random() - 0.5) * 14;
     t.position.set(x, y, z);
-    const size = 1 + Math.random() * 0.8;
+    const size = 0.7 + Math.random() * 0.55;
     t.scale.set(size * 4, size, 1);
     t.material.opacity = 0;
     t.userData = {
@@ -411,6 +412,7 @@ function initGalaxyScene(){
       floatSpeed: Math.random() * 0.8 + 0.5,
       phase: Math.random() * Math.PI * 2,
       baseSize: size,
+      baseOpacity: 0.32 + Math.random() * 0.18,
     };
     scene3.add(t);
     textoSprites.push(t);
@@ -509,7 +511,7 @@ function tickGalaxy(){
     t.position.x = Math.cos(d.orbitAngle) * d.orbitRadius;
     t.position.z = Math.sin(d.orbitAngle) * d.orbitRadius;
     t.position.y = d.baseY + Math.sin(elapsed * d.floatSpeed + d.phase) * d.floatAmp;
-    t.material.opacity = (0.55 + Math.sin(elapsed * 1.7 + d.phase) * 0.2) * eased;
+    t.material.opacity = (d.baseOpacity + Math.sin(elapsed * 1.7 + d.phase) * 0.12) * eased;
   });
 
   if (controls3) controls3.update();
