@@ -51,7 +51,6 @@ const captionCount = document.getElementById('captionCount');
 const progressDots = document.getElementById('progressDots');
 const tapHint = document.getElementById('tapHint');
 const flash = document.getElementById('flash');
-const recapGrid = document.getElementById('recapGrid');
 
 /* ---------- placeholder si falta una foto ---------- */
 function placeholderFor(i){
@@ -104,25 +103,6 @@ function showMemory(i, animate){
 
   updateDots();
   tapHint.style.opacity = i === 0 ? '1' : '0.5';
-}
-
-/* ---------- construir el recap final (grid 2D con frases) ---------- */
-function buildRecap(){
-  memories.forEach((m, i) => {
-    const item = document.createElement('div');
-    item.className = 'recap-item';
-    const img = document.createElement('img');
-    img.src = placeholderFor(i);
-    const test = new Image();
-    test.onload = () => { img.src = m.src; };
-    test.onerror = () => { img.src = placeholderFor(i); };
-    test.src = m.src;
-    const span = document.createElement('span');
-    span.textContent = m.caption;
-    item.appendChild(img);
-    item.appendChild(span);
-    recapGrid.appendChild(item);
-  });
 }
 
 /* ---------- transición entre pantallas ---------- */
@@ -521,4 +501,3 @@ function tickGalaxy(){
 }
 
 /* ---------- init ---------- */
-buildRecap();
