@@ -12,16 +12,16 @@
    ============================================================ */
 
 const memories = [
-  { src: 'images/foto1.jpg', caption: 'El día en que todo comenzó' },
-  { src: 'images/foto2.jpg', caption: 'Nuestra primera cita' },
-  { src: 'images/foto3.jpg', caption: 'Risas que se volvieron rutina' },
-  { src: 'images/foto4.jpg', caption: 'Un abrazo que se sintió como hogar' },
-  { src: 'images/foto5.jpg', caption: 'Nuestros días se volvieron algo especial' },
-    { src: 'images/foto6.jpg', caption: 'Nuestro primer viaje juntos' },
-    { src: 'images/foto7.jpg', caption: 'Aprendimos a construir un "nosotros"' },
-  { src: 'images/foto8.jpg', caption: 'Los días difíciles que superamos juntos' },
-  { src: 'images/foto9.jpg', caption: 'Pequeños detalles, grandes momentos' },
-  { src: 'images/foto10.jpg', caption: 'Un año completo de ti y yo' },
+  { src: 'images/foto1.jpg', caption: 'Ahí, sin saberlo, empezamos a escribir esta historia' },
+  { src: 'images/foto2.jpg', caption: 'Desde ese día, decidí no soltar tu mano nunca más' },
+  { src: 'images/foto3.jpg', caption: 'Aprendí que no necesito ir lejos para sentirme en casa, solo abrazarte' },
+  { src: 'images/foto4.jpg', caption: 'Cada atardecer contigo se volvió mi momento favorito del día' },
+  { src: 'images/foto5.jpg', caption: 'Me enamoré también de tu forma de reírte de la nada conmigo' },
+    { src: 'images/foto6.jpg', caption: 'Explorar el mundo contigo lo cambió todo: ya no importa el lugar, importas tú' },
+    { src: 'images/foto7.jpg', caption: 'Entre errores y aciertos, fuimos armando el nosotros que hoy somos' },
+  { src: 'images/foto8.jpg', caption: 'Estar a tu lado en tus victorias es uno de mis mayores orgullos' },
+  { src: 'images/foto9.jpg', caption: 'No fueron los planes grandes, fuiste tú, en lo cotidiano, lo que más amé' },
+  { src: 'images/foto10.jpg', caption: 'Un año después, sigo eligiéndote, sin dudarlo, cada día' },
 ];
 
 const CARTA_TEXTO = `Hoy se cumple un año desde que nuestra historia comenzó, y quiero que sepas que cada uno de esos días ha valido la pena.
