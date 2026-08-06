@@ -28,7 +28,7 @@ const CARTA_TEXTO = `Hoy se cumple un año desde que nuestra historia comenzó, 
 
 Gracias por tu paciencia, por tu risa, por convertir lo simple en especial y por quedarte incluso en los días difíciles. Contigo aprendí que el amor también se construye en la rutina, en los silencios cómodos y en las ganas de seguir eligiéndonos cada mañana.
 
-Este es apenas el primer año de muchos que quiero recorrer a tu lado. Feliz aniversario, mi amor. Te amo.`;
+Este es apenas el primer año de muchos que quiero recorrer a tu lado. Feliz primer año, mi amor. Te amo.`;
 
 /* ============================================================
    A partir de aquí es la lógica del sitio — no necesitas
